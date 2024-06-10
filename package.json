@@ -2,7 +2,9 @@
   "name": "front-tpfinal",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
+    "startBack": "node --env-file .env ./backend",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
@@ -10,8 +12,13 @@
   "dependencies": {
     "bootstrap": "^4.6.2",
     "core-js": "^3.8.3",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
     "jquery": "^3.7.1",
+    "morgan": "^1.10.0",
     "popper.js": "^1.16.1",
+    "sequelize": "^6.37.3",
+    "tedious": "^18.2.0",
     "vue": "^3.2.13"
   },
   "devDependencies": {
