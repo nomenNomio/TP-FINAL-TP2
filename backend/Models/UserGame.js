@@ -1,20 +1,20 @@
 import { DataTypes, Model } from "sequelize";
 import connection from "../connection/connection.js";
 
-class Sale extends Model {}
+class UserGame extends Model {}
 
-Sale.init(
+UserGame.init(
   {
-    amount: {
-      type: DataTypes.INTEGER,
+    favourite: {
+      type: DataTypes.BOOLEAN,
       allowNull: false,
-      min:1,
+      defaultValue:false,
     },
   },
   {
     sequelize: connection,
-    modelName: "Sale",
+    modelName: "UserGame",
   }
 );
 
-export default Sale;
+export default UserGame;

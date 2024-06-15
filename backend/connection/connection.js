@@ -8,6 +8,7 @@ import {
   DB_PORT,
 } from "../config/config.js"
 
+
 const connection = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
   host:DB_HOST,
   dialect:DB_DIALECT,

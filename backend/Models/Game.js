@@ -1,6 +1,6 @@
 import { DataTypes, Model } from "sequelize";
 import connection from "../connection/connection.js";
-import bcrypt from "bcrypt";
+import Image from "./Image.js";
 
 class Game extends Model {}
 
@@ -10,97 +10,48 @@ Game.init(
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
+        primaryKey: true,
     },
     description: {
         type: DataTypes.STRING,
         allowNull: false,
     },
     price: {
-        type: DataTypes.FLOAT,
-        allowNull: false
-    },
-    developer: {
-        type: DataTypes.STRING,
+        type: DataTypes.DECIMAL(10, 2),
         allowNull: false,
-    },
-    category: {
-        type: DataTypes.STRING,
-        allowNull: false,
+        isNumeric: true,
+        min: 0,
     },
     launchDate: {
-        type: DataTypes.STRING,
+        type: DataTypes.DATE,
         allowNull: false,
+        isDate: true,   
     },
-    editor: {
+/*     franchising: {
         type: DataTypes.STRING,
         allowNull: true,
-    },
-    franchising: {
-        type: DataTypes.STRING,
-        allowNull: true,
-    },
-    principalImage: {
-        type: DataTypes.STRING,
-        allowNull: true,
-    },
+    }, */
     logo: {
         type: DataTypes.STRING,
         allowNull: true,
-    },
-    images: {
-        type: DataTypes.JSONB,
-        allowNull: true,
-        defaultValue: []
+        isUrl: true, 
     },
     gamePlay: {
         type: DataTypes.STRING,
         allowNull: true,
     },
     rating: {
-        type: DataTypes.NUMBER,
-        allowNull: true
-    },
-    requirements: {
-        type: DataTypes.JSON,
-        allowNull: true
-      },
-    languages: {
-        type: Sequelize.STRING,
+        type: DataTypes.DECIMAL(5, 1),
         allowNull: true,
-        get() {
-            return this.getDataValue('languages').split(';')
-        },
-        set(val) {
-           this.setDataValue('languages',val.join(';'));
-        },
-    },
-    tags: {
-        type: Sequelize.STRING,
-        allowNull: true,
-        get() {
-            return this.getDataValue('tags').split(';')
-        },
-        set(val) {
-           this.setDataValue('tags',val.join(';'));
-        },
+        min: 0,
+        max: 10,
     },
   },
   {
     sequelize: connection,
     modelName: "Game",
-    hooks: {
-        beforeValidate: (instance, options) => {
-          if (instance.images) {
-            const isValid = instance.images.every(image => {
-              return typeof image.alt === 'string' && typeof image.url === 'string';
-            });
-            if (!isValid) {
-              throw new Error('Validation error: Las imagenes deben ser objetos con propiedades "alt" and "url" como strings.');
-            }
-          }
-        }
-      }
   }
 );
+
 
 export default Game;

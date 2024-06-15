@@ -1,20 +1,21 @@
 import { DataTypes, Model } from "sequelize";
 import connection from "../connection/connection.js";
 
-class Sale extends Model {}
+class Genre extends Model {}
 
-Sale.init(
+Genre.init(
   {
-    amount: {
-      type: DataTypes.INTEGER,
+    Genre: {
+      type: DataTypes.STRING,
       allowNull: false,
-      min:1,
+      isAlpha: true,
+      primaryKey: true,
     },
   },
   {
     sequelize: connection,
-    modelName: "Sale",
+    modelName: "Genre",
   }
 );
 
-export default Sale;
+export default Genre;

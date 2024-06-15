@@ -1,20 +1,20 @@
 import { DataTypes, Model } from "sequelize";
 import connection from "../connection/connection.js";
 
-class Sale extends Model {}
+class Language extends Model {}
 
-Sale.init(
+Language.init(
   {
-    amount: {
-      type: DataTypes.INTEGER,
+    language: {
+      type: DataTypes.STRING,
       allowNull: false,
-      min:1,
+      unique: true,
     },
   },
   {
     sequelize: connection,
-    modelName: "Sale",
+    modelName: "Language",
   }
 );
 
-export default Sale;
+export default Language;

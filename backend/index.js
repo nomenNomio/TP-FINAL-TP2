@@ -4,6 +4,7 @@ import morgan from "morgan";
 import connection from "./connection/connection.js";
 import cors from "cors"
 import cookieParser from "cookie-parser";
+import {Tag} from "./Models/models.js"
 import { SERVER_PORT } from "./config/config.js";
 
 const app = express();
@@ -20,6 +21,7 @@ app.use((req, res) => {
 });
 
 await connection.sync({force:true})
+
 
 console.log("\nBase de datos conectada y funcionando\n---------------------------------\n");
 
