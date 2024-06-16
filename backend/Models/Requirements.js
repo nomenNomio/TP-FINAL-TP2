@@ -9,7 +9,7 @@ Requirements.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    operativeSistem: {
+    operatingSystem: {
         type: DataTypes.STRING,
         allowNull: false,
     },

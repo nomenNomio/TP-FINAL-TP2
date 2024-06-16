@@ -5,7 +5,7 @@ class Developer extends Model {}
 
 Developer.init(
   {
-    Developer: {
+    developer: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,

@@ -1,6 +1,6 @@
 import Category from "./Category.js";
 import Developer from "./Developer.js";
-import Editor from "./Editor.js";
+import Publisher from "./Publisher.js";
 import Image from "./Image.js";
 import Game from "./Game.js";
 import Language from "./Language.js";
@@ -42,8 +42,8 @@ Category.belongsToMany(
 );
 
 
-Editor.hasMany(Game);
-Game.belongsTo(Editor);
+Publisher.hasMany(Game);
+Game.belongsTo(Publisher);
 
 Game.hasMany(
     Image,
@@ -64,13 +64,11 @@ Image.belongsTo(
 );
 
 Image.hasOne(Game, {
-  as: "principalImage",
-  foreignKey: "principalImageId",
+  foreignKey: "mainImageId",
   constraints: false,
 });
 Game.belongsTo(Image, {
-  as: "principalImage",
-  foreignKey: "principalImageId",
+  foreignKey: "mainImageId",
   constraints: false,
 });
 
@@ -150,7 +148,7 @@ User.belongsToMany(
 export {
     Category,
     Developer,
-    Editor,
+    Publisher,
     Game,
     Language,
     Requirements,
@@ -159,4 +157,5 @@ export {
     Tag,
     User,
     UserGame,
+    Image,
 };

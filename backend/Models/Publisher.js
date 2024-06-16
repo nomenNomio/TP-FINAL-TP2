@@ -1,11 +1,11 @@
 import { DataTypes, Model } from "sequelize";
 import connection from "../connection/connection.js";
 
-class Editor extends Model {}
+class Publisher extends Model {}
 
-Editor.init(
+Publisher.init(
   {
-    editor: {
+    publisher: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
@@ -14,8 +14,8 @@ Editor.init(
   },
   {
     sequelize: connection,
-    modelName: "Editor",
+    modelName: "Publisher",
   }
 );
 
-export default Editor;
+export default Publisher;
