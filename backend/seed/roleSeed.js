@@ -4,5 +4,6 @@ export async function roleSeed() {
   await Role.bulkCreate([
     { role: "ADMIN" },
     { role: "USER" },
+    { role: "PAID_USER" },
   ]);
 }

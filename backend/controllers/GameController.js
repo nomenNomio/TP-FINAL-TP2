@@ -108,6 +108,48 @@ class GameController {
     }
 
   }
+
+  async deleteGame(req, res){
+    try {
+
+      const { title } = req.body;
+      console.log(req.body)
+      const result = await Game.destroy({
+        where: {
+          title,
+        },
+      });
+
+      res
+      .status(200)
+      .send({ success: true, message: "Juego eliminado con exito." });
+    } catch (error) {
+      res.status(400).send({ success: false, message: error });
+    }
+
+  }
+
+  async getAllGames(req, res){
+
+    try {
+
+      const result = await Game.findAll({
+        attributes: ["title", "description", "price", "launchDate", "logo", "gamePlay", "rating", "DeveloperId",  "PublisherId", "mainImageId"],
+        include: {
+          model:Language,
+          attributes:["language"],
+          through:{attributes:[]}
+        },
+      });
+
+      res
+      .status(200)
+      .send({ success: true, message: result });
+    } catch (error) {
+      res.status(400).send({ success: false, message: error });
+    }
+
+  }
 }
 
 export default GameController;
