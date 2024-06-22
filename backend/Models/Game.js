@@ -1,8 +1,103 @@
-import { DataTypes, Model } from "sequelize";
+import { DataTypes, Model, where } from "sequelize";
 import connection from "../connection/connection.js";
-import Image from "./Image.js";
 
-class Game extends Model {}
+import {
+  Developer,
+  Category,
+  GameCategories,
+  Requirements,
+  Image,
+  Publisher,
+  Tag,
+  GameTags,
+  GameLanguages,
+  Language,
+} from "../Models/models.js";
+
+
+class Game extends Model {
+
+    static async create({
+        title,
+        description,
+        price,
+        launchDate,
+        logo,
+        gamePlay,
+        rating,
+        developer,
+        publisher,
+        mainImage,
+        images,
+        categories,
+        requirements,
+        tags,
+        languages,
+        },
+        {transaction}
+    )
+    {
+
+        images.push(mainImage);
+
+        const developerInstance = await Developer.findOne({ where: { developer }, transaction });
+        const publisherInstance = await Publisher.findOne({ where: { publisher }, transaction });
+
+        const game = await super.create(
+            {
+                title,
+                description,
+                price,
+                launchDate,
+                logo,
+                gamePlay,
+                rating,
+                DeveloperId: developerInstance.id,
+                images,
+                requirements,
+            },
+            {
+                include: [
+                    {
+                        model: Image,
+                        as: "images",
+                    },
+                    {
+                        model: Requirements,
+                        as: "requirements",
+                    },
+                ],
+                transaction,
+            }
+        );
+
+        for (let category of categories) {
+            const categoryInstance = await Category.findOne({ where: { category }, transaction });
+            await GameCategories.create({ GameTitle: game.title, CategoryId: categoryInstance.id }, { transaction });
+        }
+
+        for (let language of languages) {
+            const languageInstance = await Language.findOne({ where: { language }, transaction });
+            await GameLanguages.create({ GameTitle: game.title, LanguageId: languageInstance.id }, { transaction });
+        }
+
+        for (let tag of tags) {
+            const tagInstance = await Tag.findOne({ where: { tag }, transaction });
+            await GameTags.create({ GameTitle: game.title, TagId: tagInstance.id }, { transaction });
+        }
+
+        game.publisherId = publisherInstance?.id;
+        const mainImageInstance = await Image.findOne({
+            where: { ...mainImage, GameTitle: game.title },
+            transaction,
+        });
+        game.mainImageId = mainImageInstance.id;
+        await game.save({ transaction });
+
+        return game;
+        //terminar de refactorizar
+    }
+}
 
 Game.init(
   {

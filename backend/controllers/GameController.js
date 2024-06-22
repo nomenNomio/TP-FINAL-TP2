@@ -38,62 +38,24 @@ class GameController {
 
       const gameResult = await Game.create(
         {
-            title,
-            description,
-            price,
-            launchDate,
-            logo,
-            gamePlay,
-            rating,
-            DeveloperId: (await Developer.findOne({ where: {developer} })).id,
+          title,
+          description,
+          price,
+          launchDate,
+          logo,
+          gamePlay,
+          rating,
+          developer,
+          publisher,
+          mainImage,
+          images,
+          categories,
+          requirements,
+          tags,
+          languages,
         },
         { transaction: transactionCreateGame},
       );
-      
-      gameResult.setPublisher(
-        await Publisher.findOne({ where: { publisher } }),
-        { transaction: transactionCreateGame }
-      );
-
-      for(let requirementGroup of requirements){
-        await gameResult.createRequirement(
-          requirementGroup,
-          { transaction: transactionCreateGame }
-        );
-      }
-
-      gameResult.addCategories(
-        await Category.findAll({ where: { Category: categories } }),
-        { transaction: transactionCreateGame }
-      );
-
-      gameResult.addTags(
-        await Tag.findAll({ where: { tag: tags } }),
-        { transaction: transactionCreateGame }
-      );
-
-      gameResult.addLanguages(
-        await Language.findAll({ where: { Language: languages } }),
-        { transaction: transactionCreateGame }
-      );
-
-      images.push(mainImage)
-      for(let image of images){
-
-        await gameResult.createImage(
-          image,
-          { transaction: transactionCreateGame }
-        );
-      }
-
-      gameResult.mainImageId = (
-        await Image.findOne({
-          where: mainImage,
-          transaction: transactionCreateGame,
-        })
-      ).id;
-      await gameResult.save({ transaction: transactionCreateGame })
-
 
       await transactionCreateGame.commit();
 
@@ -113,7 +75,6 @@ class GameController {
     try {
 
       const { title } = req.body;
-      console.log(req.body)
       const result = await Game.destroy({
         where: {
           title,
@@ -134,11 +95,22 @@ class GameController {
     try {
 
       const result = await Game.findAll({
-        attributes: ["title", "description", "price", "launchDate", "logo", "gamePlay", "rating", "DeveloperId",  "PublisherId", "mainImageId"],
+        attributes: [
+          "title",
+          "description",
+          "price",
+          "launchDate",
+          "logo",
+          "gamePlay",
+          "rating",
+          "DeveloperId",
+          "PublisherId",
+          "mainImageId",
+        ],
         include: {
-          model:Language,
-          attributes:["language"],
-          through:{attributes:[]}
+          model: Language,
+          attributes: ["language"],
+          through: { attributes: [] },
         },
       });
 

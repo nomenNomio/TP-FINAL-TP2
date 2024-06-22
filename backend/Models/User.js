@@ -1,12 +1,35 @@
 import { DataTypes, Model } from "sequelize";
 import connection from "../connection/connection.js";
 import bcrypt from "bcrypt";
+import Role from "./Role.js";
 
 class User extends Model {
-  comparePass = async (password) => {
+  async comparePass(password) {
     const compare = await bcrypt.compare(password, this.password);
     return compare;
-  };
+  }
+
+  static async create(
+    { name, lastName, userName, email, password, role },
+    { transaction }
+  )
+  {
+
+    const user = await super.create(
+      {
+        name,
+        lastName,
+        userName,
+        email,
+        password,
+        RoleId: (await Role.findOne({ where: { role }, transaction })).id,
+      },
+      { transaction }
+    );
+
+    return user;
+
+  }
 }
 
 User.init(

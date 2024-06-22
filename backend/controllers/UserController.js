@@ -2,7 +2,16 @@ import connection from "../connection/connection.js";
 import { User, Role, UserGame, Sale } from "../Models/models.js";
 import { genToken, verifyToken } from "../utils/token.js";
 
+const USER_TOKEN_NAME = "token";
+
 class UserControllers {
+
+  #userToken({id, userName}){
+
+    const token = genToken({id, userName});
+
+    return token;
+  }
 
   async getAllUser(req, res) {
 
@@ -29,6 +38,7 @@ class UserControllers {
       const { id } = req.params;
 
       const result = await User.findByPk(id);
+      if(!result) throw error;
 
       res.status(200).send({ success: true, message: result });
     } catch (error) {
@@ -43,7 +53,8 @@ class UserControllers {
     try {
 
       const { name, lastName, userName, email, password, role} = req.body;
-      if(role.role=="ADMIN"){throw new Error("Rol no valido.");};
+      
+      if(role.toUpperCase()=="ADMIN") throw new Error("Rol no valido.");
 
       const UserResult = await User.create(
         {
@@ -52,21 +63,14 @@ class UserControllers {
           userName,
           email,
           password,
-          RoleId: (await Role.findOne({ where: {role} })).id,
+          role,
         },
         {transaction:transactionCreateUser}
       );
 
       await transactionCreateUser.commit();
 
-      const payload = {
-        id: UserResult.id,
-        userName: UserResult.userName,
-      };
-
-      const token = genToken(payload);
-      res.cookie("token", token);
-
+      res.cookie(USER_TOKEN_NAME, userToken(UserResult));
       res.status(200).send({
         success: true,
         message: `Usuario: ${UserResult.dataValues.name} creado con exito`,
@@ -82,7 +86,8 @@ class UserControllers {
   async updateUser(req, res) {
 
     try {
-      const { id } = req.params;
+      //modifica el usuario que tenga el mismo id que en la cookie
+      const { id } = req.user.id;
       const { userName, mail, password } = req.body;
 
       const result = await User.update(
@@ -106,7 +111,7 @@ class UserControllers {
   async deleteUser(req, res) {
 
     try {
-      const { id } = req.params;
+      const { id } = req.body;
       const result = await User.destroy({
         where: {
           id,
@@ -124,6 +129,7 @@ class UserControllers {
 
   async login (req, res){
     try {
+
       const { mail, password } = req.body;
 
       const user = await User.findOne({
@@ -131,20 +137,13 @@ class UserControllers {
           mail,
         },
       });
-
       if (!user) throw new Error("Usuario no encontrado.");
 
       const comparePass = await user.comparePass(password);
       if (!comparePass) throw new Error("El usuario o la contraseña son incorrectos.");
 
-      const payload = {
-        id: user.id,
-        userName: user.userName,
-      };
 
-      const token = genToken(payload);
-      res.cookie("token", token);
-
+      res.cookie(USER_TOKEN_NAME, userToken(user));
       res
         .status(200)
         .send({ success: true, message: "usuario logueado con exito" });
@@ -153,7 +152,7 @@ class UserControllers {
     }
   };
 
-   async me(req, res) {
+  async me(req, res) {
     try {
       const { user } = req;
       res.status(200).send({ success: true, message: user });
@@ -271,9 +270,6 @@ class UserControllers {
           favourite:true,
         }
       });
-
-      console.log("\n");
-      console.log(favouriteGames);
 
       res.status(200).send({ success: true, message: favouriteGames });
     } catch (error) {
