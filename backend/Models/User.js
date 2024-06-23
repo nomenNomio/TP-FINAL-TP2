@@ -15,6 +15,10 @@ class User extends Model {
   )
   {
 
+    const roleInstance = await Role.findOne({ where: { role }, transaction });
+    if(!roleInstance) throw new Error("El rol enviado no se econtro");
+    const RoleId = roleInstance.id;
+
     const user = await super.create(
       {
         name,
@@ -22,7 +26,7 @@ class User extends Model {
         userName,
         email,
         password,
-        RoleId: (await Role.findOne({ where: { role }, transaction })).id,
+        RoleId,
       },
       { transaction }
     );

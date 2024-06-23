@@ -1,4 +1,4 @@
-import { Game, Developer, Publisher, Category, Tag, Language, Requirements, Image } from "../Models/models.js";
+import { Game, Language} from "../Models/models.js";
 
 import connection from "../connection/connection.js";
 
@@ -28,7 +28,7 @@ class GameController {
         languages,
       } = req.body;
 
-      console.log(req.body);
+      //console.log(req.body);
 
       if(!developer){ throw new Error("El developer no puede estar vacio."); };
       if(!mainImage){ throw new Error("La imagen princial no puede estar vacia."); };

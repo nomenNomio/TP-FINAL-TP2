@@ -14,10 +14,111 @@ import {
   Language,
 } from "../Models/models.js";
 
-
 class Game extends Model {
 
-    static async create({
+  //tengo que hacer funciones repetitivas porque pasar tipos bien es un quilombo
+  //esto estaria más bien para Typescript
+  //puedo hacerlo de todas formas pero para no hacerlo tan engorroso decidí hacer 3 funciones similares y listo
+
+  async bulkCreateGameCategory(categories, { transaction }) {
+
+    //busca una categoria, le saca el id y con eso crea una "GameCategories", lo hace para todas las categorias
+    //las otras funciones hacen lo mismo pero con otros tipos (se podrian unificar pero es un dolor de huevos)
+
+    const gameCategories = await Promise.all(
+        categories.map(async (category) => {
+            const query = { where: { category }, transaction };
+            const categoryInstance = await Category.findOne(query);
+            if(!categoryInstance) throw new Error("Uno de las categorias enviadas no existe o no fue encontrada.");
+            const CategoryId = categoryInstance.id;
+            const gameCategory = { GameTitle: this.title, CategoryId };
+            return gameCategory;
+        })
+    );
+
+    return await GameCategories.bulkCreate(gameCategories, {transaction} );
+  }
+
+  async bulkCreateGameLanguage(languages, { transaction }) {
+    const gameLanguages = await Promise.all(
+        languages.map(async (language) => {
+            const query = { where: { language }, transaction };
+            const languageInstance = await Language.findOne(query);
+            if(!languageInstance) throw new Error("Uno de los lenguajes enviados no existe o no fue encontrado.");
+            const LanguageId = languageInstance.id;
+            const gameLanguage = { GameTitle: this.title, LanguageId };
+            return gameLanguage;
+      })
+    );
+
+    return await GameLanguages.bulkCreate(gameLanguages, {transaction} );
+  }
+
+  async bulkCreateGameTag(tags, { transaction }) {
+    const gameTags = await Promise.all(
+        tags.map(async (tag) => {
+            const query = { where: { tag }, transaction };
+            const tagInstance = await Tag.findOne(query);
+            if(!tagInstance) throw new Error("Uno de los tags enviados no existe o no fue encontrado.");
+            const TagId = tagInstance.id;
+            const gameTag = { GameTitle: this.title, TagId };
+            return gameTag;
+      })
+    );
+
+    return await GameTags.bulkCreate(gameTags, {transaction} );
+  }
+
+  async setMainImage(mainImage, {transaction}){
+
+    const query = {
+      where: {
+        GameTitle: this.title,
+        ...mainImage,
+      },
+      transaction,
+    };
+
+    const mainImageInstance = await Image.findOne(query);
+    if(!mainImageInstance) throw new Error("La imagen principal tuvo un error.");
+    const mainImageId = mainImageInstance.id;
+    this.mainImageId = mainImageId;
+    await this.save({ transaction });
+
+  }
+
+  static async create(
+    {
+      title,
+      description,
+      price,
+      launchDate,
+      logo,
+      gamePlay,
+      rating,
+      developer,
+      publisher,
+      mainImage,
+      images,
+      categories,
+      requirements,
+      tags,
+      languages,
+    },
+    { transaction }
+  ) {
+
+    images.push(mainImage);
+
+    const developerInstance = await Developer.findOne({ where: { developer }, transaction });
+    if(!developerInstance) throw new Error("El desarrollador no existe o no fue encontrado");
+    const DeveloperId = developerInstance.id;
+
+    const publisherInstance = await Publisher.findOne({ where: { publisher }, transaction });
+    const publisherId = publisherInstance?.id;
+
+    const game = await super.create(
+      {
         title,
         description,
         price,
@@ -25,78 +126,35 @@ class Game extends Model {
         logo,
         gamePlay,
         rating,
-        developer,
-        publisher,
-        mainImage,
+        DeveloperId,
+        publisherId,
         images,
-        categories,
         requirements,
-        tags,
-        languages,
-        },
-        {transaction}
-    )
-    {
+      },
+      {
+        include: [
+          {
+            model: Image,
+            as: "images",
+          },
+          {
+            model: Requirements,
+            as: "requirements",
+          },
+        ],
+        transaction,
+      }
+    );
 
-        images.push(mainImage);
+    await game.bulkCreateGameCategory(categories, {transaction});
+    await game.bulkCreateGameLanguage(languages, {transaction});
+    await game.bulkCreateGameTag(tags, {transaction});
 
-        const developerInstance = await Developer.findOne({ where: { developer }, transaction });
-        const publisherInstance = await Publisher.findOne({ where: { publisher }, transaction });
+    await game.setMainImage(mainImage, {transaction});
 
-        const game = await super.create(
-            {
-                title,
-                description,
-                price,
-                launchDate,
-                logo,
-                gamePlay,
-                rating,
-                DeveloperId: developerInstance.id,
-                images,
-                requirements,
-            },
-            {
-                include: [
-                    {
-                        model: Image,
-                        as: "images",
-                    },
-                    {
-                        model: Requirements,
-                        as: "requirements",
-                    },
-                ],
-                transaction,
-            }
-        );
-
-        for (let category of categories) {
-            const categoryInstance = await Category.findOne({ where: { category }, transaction });
-            await GameCategories.create({ GameTitle: game.title, CategoryId: categoryInstance.id }, { transaction });
-        }
-
-        for (let language of languages) {
-            const languageInstance = await Language.findOne({ where: { language }, transaction });
-            await GameLanguages.create({ GameTitle: game.title, LanguageId: languageInstance.id }, { transaction });
-        }
-
-        for (let tag of tags) {
-            const tagInstance = await Tag.findOne({ where: { tag }, transaction });
-            await GameTags.create({ GameTitle: game.title, TagId: tagInstance.id }, { transaction });
-        }
-
-        game.publisherId = publisherInstance?.id;
-        const mainImageInstance = await Image.findOne({
-            where: { ...mainImage, GameTitle: game.title },
-            transaction,
-        });
-        game.mainImageId = mainImageInstance.id;
-        await game.save({ transaction });
-
-        return game;
-        //terminar de refactorizar
-    }
+    return game;
+    
+  }
 }
 
 Game.init(

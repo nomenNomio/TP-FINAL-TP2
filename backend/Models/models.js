@@ -32,12 +32,14 @@ import UserGame from "./UserGame.js";
 
 //Game many-to-many Category through GameCategories//
 
-    const GameCategories = connection.define("GameCategories", {});
+    const GameCategories = connection.define("GameCategories",{})
 
     Game.belongsToMany(Category, {
+      as: 'gameCategories',
       through: GameCategories,
     });
     Category.belongsToMany(Game, {
+      as: 'gameCategories',
       through: GameCategories,
     });
 
@@ -99,19 +101,31 @@ import UserGame from "./UserGame.js";
 
 //Game many-to-many Requirements through GameLanguages//
 
-    const GameLanguages = connection.define("GameLanguages", {});
+    const GameLanguages = connection.define("GameLanguages",{})
 
-    Game.belongsToMany(Language, { through: GameLanguages });
-    Language.belongsToMany(Game, { through: GameLanguages });
+    Game.belongsToMany(Language, {
+      as: "gameLanguages",
+      through: GameLanguages,
+    });
+    Language.belongsToMany(Game, {
+      as: "gameLanguages",
+      through: GameLanguages,
+    });
 
 //---------------------------//
 
 //Game many-to-many Tag through GameLanguages//
 
-    const GameTags = connection.define("GameTags", {});
+    const GameTags = connection.define("GameTags",{})
 
-    Game.belongsToMany(Tag, { through: GameTags });
-    Tag.belongsToMany(Game, { through: GameTags });
+    Game.belongsToMany(Tag, {
+      as: "gameTags",
+      through: GameTags,
+    });
+    Tag.belongsToMany(Game, { 
+      as: "gameTags",
+      through: GameTags,
+    });
 
 //---------------------------//
 
