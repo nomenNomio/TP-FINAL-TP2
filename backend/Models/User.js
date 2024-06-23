@@ -1,7 +1,7 @@
 import { DataTypes, Model } from "sequelize";
 import connection from "../connection/connection.js";
 import bcrypt from "bcrypt";
-import Role from "./Role.js";
+import {Role} from "./models.js";
 
 class User extends Model {
   async comparePass(password) {
@@ -33,6 +33,12 @@ class User extends Model {
 
     return user;
 
+  }
+
+  static async isAdminByPk(PK){
+    const {dataValues: user} = await User.findByPk(PK);
+    const {dataValues: roleTable} = await Role.findByPk(user.RoleId);
+    return roleTable.role == "ADMIN";
   }
 }
 

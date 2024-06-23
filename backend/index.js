@@ -4,7 +4,7 @@ import morgan from "morgan";
 import connection from "./connection/connection.js";
 import cors from "cors"
 import cookieParser from "cookie-parser";
-import {Tag} from "./Models/models.js"
+
 import { SERVER_PORT } from "./config/config.js";
 
 import { seeds } from "./seed/seeds.js";
@@ -16,17 +16,20 @@ app.use(express.json());
 app.use(morgan("tiny"));
 app.use(cookieParser());
 
+//importar las rutas
 app.use(routes);
 
+//si no encuentra la ruta manda un 404
 app.use((req, res) => {
   res.status(404).send({ success: false, message: "not found" });
 });
 
+//connectar con la DB
 await connection.sync({force:true})
 
 //generar las tablas iniciales (seeds)
 await seeds();
-//generar las tablas iniciales (seeds)
+
 
 console.log("\nBase de datos conectada y funcionando\n---------------------------------\n");
 
