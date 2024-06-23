@@ -6,7 +6,7 @@ const USER_TOKEN_NAME = "token";
 
 class UserControllers {
 
-  #userToken({id, userName}){
+  userToken({id, userName}){
 
     const token = genToken({id, userName});
 
