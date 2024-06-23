@@ -211,6 +211,7 @@ class UserControllers {
   }
 
   async faveUnFave(req, res) {
+    //pone el juego pasado en el body como favorito o lo saca de favorito
     const transactionFave = await connection.transaction();
 
     try {
