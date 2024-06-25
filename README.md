@@ -1,6 +1,5 @@
 # TP-FINAL-TP2
 
-El tp final de TP 2
 
 # INICIO 
 
@@ -36,6 +35,8 @@ En "Game.js" se crea el juego y las relaciones de este, que fueron importadas de
 
 Se devuelve el juego y se envia.
 
+# RUTAS
+
 ## Rutas Game
 
 #### GET /game/
@@ -57,7 +58,7 @@ crea un usuario
 hace el login
 
 
-### PARA TODO ESTO HAY QUE LOGUEARSE 
+#### Para Todo Esto Hay que Loguearse
 
 #### GET /user/
 devuelve todos los usuarios, necesitas estar logueado como admin
