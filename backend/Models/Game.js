@@ -51,6 +51,8 @@ class Game extends Model {
       })
     );
 
+    //[chino, ingles] => [{ GameTitle: "Minecraft", LanguageId:1 }, { GameTitle: "Minecraft", LanguageId:2 }]
+
     return await GameLanguages.bulkCreate(gameLanguages, {transaction} );
   }
 

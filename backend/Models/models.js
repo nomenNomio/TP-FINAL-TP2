@@ -99,7 +99,7 @@ import UserGame from "./UserGame.js";
 
 //---------------------------//
 
-//Game many-to-many Requirements through GameLanguages//
+//Game many-to-many Languages through GameLanguages//
 
     const GameLanguages = connection.define("GameLanguages",{})
 

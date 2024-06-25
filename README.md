@@ -2,9 +2,15 @@
 
 El tp final de TP 2
 
-# INICIO
+# INICIO 
 
-Para iniciar usar el comando "npm run startBack"
+Clonar el Repo
+
+Hacer npm i
+
+Usamos SQL Server, nos conectamos a un usuario con permisos sacados de un archivo .env
+
+Para iniciar usar el comando "npm run startBack" (Fijarse que este corriendo la base de datos)
 
 La app inicia desde el index.js y se agarran los datos del .env
 

@@ -25,14 +25,16 @@ app.use((req, res) => {
 });
 
 //connectar con la DB
-await connection.sync({force:true})
+await connection.sync({force:true});
 
 //generar las tablas iniciales (seeds)
 await seeds();
 
 
-console.log("\nBase de datos conectada y funcionando\n---------------------------------\n");
+console.log("\n", "Base de datos conectada y funcionando");
+console.log("\n---------------------------------\n");
 
 app.listen(SERVER_PORT, () => {
-  console.log(`El servidor fue lanzado y escucha en: http://localhost:8080\n---------------------------------\n`);
+  console.log(`El servidor fue lanzado y escucha en: http://localhost:${SERVER_PORT}`);
+  console.log("\n---------------------------------\n");
 });
