@@ -25,45 +25,90 @@ SECRET=<"un SECRET que se utiliza para salar contraseñas">
 
 Clonar el Repositorio.
 
-Correr el comando `npm i`
+Correr el comando `npm i`.
 
+Para iniciar usar el comando "npm run startBack" (Fijarse que este corriendo la base de datos).
 
+La app inicia desde el index.js y se agarran los datos del .env.
 
-Para iniciar usar el comando "npm run startBack" (Fijarse que este corriendo la base de datos)
+Con los imports se llaman todos los inits y se inicia el modelo.
 
-La app inicia desde el index.js y se agarran los datos del .env
+Se cargan las rutas.
 
-Con los imports se llaman todos los inits y se inicia el modelo
-
-Despues se cargan las rutas
-
-Por ultimo se vincula con la base de datos y se lanza el server
-
-# CREACION DE UN JUEGO
-
-Una vez se lanza el server este esta a la disposicion de las consultas
-
-En la ruta "/game/" con el verbo POST se crea un juego
-
-Se le han de pasar los parametros en forma de objeto json como requiere el model "Game.js"
-
-Esos parametros entran en el metodo "createGame" de "GameController.js"
-
-Y de ahí pasan a "Game.js" que sobreescribe el metodo "create"
-
-En "Game.js" se crea el juego y las relaciones de este, que fueron importadas de "models.js" donde se definen todas las relaciones
-
-Se devuelve el juego y se envia.
+Por ultimo se vincula con la base de datos y se lanza el server.
 
 # RUTAS
 
 ## Rutas Game
 
 #### GET /game/
-devuelve todos los juegos
+Devuelve todos los juegos.
 
 #### POST /game/
-crea un juego
+Crea un juego, el formato pasado en el body debe ser:
+```
+{
+    "title": <"Nombre del juego">,
+    "description": <"Descripcion">,
+    "price": <"Precio, puede ser un numero real">,
+    "launchDate": <"Fecha, ej:2012-04-23T18:25:43.511Z">,
+    "logo": <"URL">,
+    "gamePlay": <"Descripcion del gameplay">,
+    "rating": <"Numero real del 1 al 10">,
+    "developer": <"El desarrollador">,
+    "publisher": <"El distribuidor, puede ser null">,
+    "mainImage": {
+        "alt": <"Descripcion de la imagen">,
+        "url": <"URL">
+    },
+    "images": [
+        {
+            "alt": <"Descripcion de la imagen">,
+            "url": <"URL">
+        },
+        {
+            "alt": <"Descripcion de la imagen">,
+            "url": <"URL">
+        },
+        ...
+    ],
+    "categories": [
+        <"Categoria_1">,
+        <"Categoria_2">,
+        ...
+    ],
+    "requirements": [
+        {
+            "typeReq": <"El tipo, ej: Minimos, Recomendados, etc.">,
+            "operatingSystem": <"Sistema Operativo">,
+            "processor": <"Procesador">,
+            "memory": <"RAM">,
+            "graphics": <"Placa grafica">,
+            "storage": <"Almacenamiento">
+        },
+        {
+            "typeReq": <"El tipo, ej: Minimos, Recomendados, etc.">,
+            "operatingSystem": <"Sistema Operativo">,
+            "processor": <"Procesador">,
+            "memory": <"RAM">,
+            "graphics": <"Placa grafica">,
+            "storage": <"Almacenamiento">
+        },
+        ...
+    ],
+    "tags": [
+        <"Tag_1">,
+        <"Tag_2">,
+        ...
+    ],
+    "languages": [
+        <"Idioma_1">,
+        <"Idioma_2">,
+        <"Idioma_3">,
+        ...
+    ]
+}
+```
 
 #### DELETE /game/
 borra un juego pasando el titulo por el body
@@ -109,3 +154,20 @@ pone el juego pasado en el body como favorito si no lo estaba y viceversa
 
 #### DELETE /user/
 borra un usuario pasado en el body
+
+
+# CREACION DE UN JUEGO
+
+Una vez se lanza el server este esta a la disposicion de las consultas
+
+En la ruta "/game/" con el verbo POST se crea un juego
+
+Se le han de pasar los parametros en forma de objeto json como requiere el model "Game.js"
+
+Esos parametros entran en el metodo "createGame" de "GameController.js"
+
+Y de ahí pasan a "Game.js" que sobreescribe el metodo "create"
+
+En "Game.js" se crea el juego y las relaciones de este, que fueron importadas de "models.js" donde se definen todas las relaciones
+
+Se devuelve el juego y se envia.
