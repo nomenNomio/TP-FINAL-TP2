@@ -111,17 +111,39 @@ Crea un juego, el formato pasado en el body debe ser:
 ```
 
 #### DELETE /game/
-borra un juego pasando el titulo por el body
+borra un juego pasando el titulo por el body:
 
+```
+{
+    "title": <"Juego a borrar">
+}
+```
 
 ## Rutas User
 
 #### POST /user/
-crea un usuario
+crea un usuario, el formato en el body debe ser:
 
-#### POST /user/me
-hace el login
+```
+{
+    "name": <"Nombre">,
+    "lastName": <"Apellido">,
+    "userName": <"Nickname">,
+    "email": <"El email">,
+    "password": <"Contraseña">,
+    "role": <"El rol del usuario, no puede ser ADMIN">
+}
+```
 
+#### POST /user/login
+hace el login, el body tiene un formato:
+s
+```
+{
+    "email": <"El email">,
+    "password": <"Contraseña">
+}
+```
 
 #### Para Todo Esto Hay que Loguearse
 
