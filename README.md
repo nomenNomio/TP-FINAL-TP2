@@ -3,9 +3,9 @@
 
 # INICIO 
 
-Clonar el Repo
+Clonar el Repositorio.
 
-Hacer npm i
+Correr el comando `npm i`
 
 Usamos SQL Server, nos conectamos a un usuario con permisos sacados de un archivo .env
 
