@@ -1,6 +1,6 @@
 import { Category } from "../Models/models.js";
 
-export async function categoryrSeed() {
+export async function categorySeed() {
   await Category.bulkCreate([
     { category: "Horror" },
     { category: "Action" },

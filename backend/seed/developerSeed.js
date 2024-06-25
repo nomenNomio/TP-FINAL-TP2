@@ -8,5 +8,6 @@ export async function developerSeed() {
     { developer: "Bethesda" },
     { developer: "Mojang" },
     { developer: "Respawn Entertainment" },
+    { developer: "Dodge Roll" },
   ]);
 }

@@ -115,7 +115,7 @@ class Game extends Model {
     const DeveloperId = developerInstance.id;
 
     const publisherInstance = await Publisher.findOne({ where: { publisher }, transaction });
-    const publisherId = publisherInstance?.id;
+    const PublisherId = publisherInstance?.id;
 
     const game = await super.create(
       {
@@ -127,7 +127,7 @@ class Game extends Model {
         gamePlay,
         rating,
         DeveloperId,
-        publisherId,
+        PublisherId,
         images,
         requirements,
       },
