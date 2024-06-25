@@ -182,10 +182,6 @@ Game.init(
         allowNull: false,
         isDate: true,   
     },
-/*     franchising: {
-        type: DataTypes.STRING,
-        allowNull: true,
-    }, */
     logo: {
         type: DataTypes.STRING,
         allowNull: true,
