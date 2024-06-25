@@ -1,5 +1,25 @@
 # TP-FINAL-TP2
 
+# PREREQUISITOS
+
+Este proyecto utiliza Sequelize con SQL Server.
+
+Si se quiere utilizar otra base de datos se tiene que descargar la libreria correspondiente.
+
+Hay que crear un usuario en SQL Server con permisos suficientes en una tabla.
+
+En base a eso hay que hacer un archivo `.env` con el siguiente formato:
+
+```
+SERVER_PORT=<"El puerto donde se lanza el server">
+DB_NAME=<"El nombre de la base de datos">
+DB_USER=<"El nombre del usuario">
+DB_PASSWORD=<"La contraseña del usuario">
+DB_HOST=<"El host (ej: localhost)">
+DB_DIALECT=<"El dialecto que utiliza la base de datos">
+DB_PORT=<"El puerto en el que escucha la base de datos">
+SECRET=<"un SECRET que se utiliza para salar contraseñas">
+```
 
 # INICIO 
 
@@ -7,7 +27,7 @@ Clonar el Repositorio.
 
 Correr el comando `npm i`
 
-Usamos SQL Server, nos conectamos a un usuario con permisos sacados de un archivo .env
+
 
 Para iniciar usar el comando "npm run startBack" (Fijarse que este corriendo la base de datos)
 
