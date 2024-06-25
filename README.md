@@ -137,7 +137,7 @@ crea un usuario, el formato en el body debe ser:
 
 #### POST /user/login
 hace el login, el body tiene un formato:
-s
+
 ```
 {
     "email": <"El email">,
@@ -148,35 +148,81 @@ s
 #### Para Todo Esto Hay que Loguearse
 
 #### GET /user/
-devuelve todos los usuarios, necesitas estar logueado como admin
+devuelve todos los usuarios, necesitas estar logueado como ADMIN.
+
+El email del ADMIN es "admin@gmail.com" y la contraseña es "admin".
 
 #### GET /user/favourite
-devuelve todos los juegos favoritos del usuario logueado
+Devuelve todos los juegos favoritos del usuario logueado.
 
 #### GET /user/me
-devuelve los datos de la cookie
+Devuelve los datos de la cookie.
 
 #### GET /user/:id
-devuelve un usuario pasado por id
+Devuelve un usuario pasado por id.
 
 
 #### POST /user/buygame
-compra la cantidad de juegos pasada en el body
+Compra la cantidad de juegos pasada en el body y se los añade al usuario de la cookie.
+
+El formato del body es:
+
+```
+{
+    "title":<"Nombre del juego">,
+    "amount":<"Entero positivo">
+}
+```
 
 #### POST /user/claimgame
-reclama un juego ya comprado
+Reclama un juego ya comprado por el usuario de la cookie.
 
+El formato del body es:
+
+```
+{
+    "title":<"Nombre del juego">,
+}
+```
 
 #### PUT /user/
-actualiza el usuario de la cookie
+Actualiza el usuario de la cookie.
+
+El formato del body es:
+
+```
+{
+    "name": <"Nuevo nombre">,
+    "userName": <"Nuevo nickname">,
+    "email": <"Nuevo email">,
+    "password": <"Nueva contraseña">
+}
+```
+
+Todos los valores pueden ser nulos.
 
 #### PUT /user/favourite
-pone el juego pasado en el body como favorito si no lo estaba y viceversa
+Pone el juego pasado en el body como favorito para el usuario de la cookie si no lo estaba y viceversa.
 
+El formato del body es:
+
+```
+{
+    "title": <"Nombre del juego">
+}
+```
 
 #### DELETE /user/
-borra un usuario pasado en el body
 
+Borra un usuario pasado en el body.
+
+El formato del body es:
+
+```
+{
+    "id": 2
+}
+```
 
 # CREACION DE UN JUEGO
 
