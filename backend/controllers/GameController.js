@@ -28,13 +28,11 @@ class GameController {
         languages,
       } = req.body;
 
-      //console.log(req.body);
-
-      if(!developer){ throw new Error("El developer no puede estar vacio."); };
-      if(!mainImage){ throw new Error("La imagen princial no puede estar vacia."); };
-      if(!categories.length){ throw new Error("El juego debe tener por lo menos una categoria."); };
-      if(!requirements.length){ throw new Error("El juego debe tener por lo menos un requerimiento."); };
-      if(!languages.length){ throw new Error("El juego debe tener por lo menos un idioma."); };
+      if(!developer) throw new Error("El developer no puede estar vacio.");
+      if(!mainImage) throw new Error("La imagen princial no puede estar vacia."); 
+      if(!categories.length) throw new Error("El juego debe tener por lo menos una categoria.");
+      if(!requirements.length) throw new Error("El juego debe tener por lo menos un requerimiento.");
+      if(!languages.length) throw new Error("El juego debe tener por lo menos un idioma.");
 
       const gameResult = await Game.create(
         {
@@ -73,8 +71,10 @@ class GameController {
 
   async deleteGame(req, res){
     try {
-
       const { title } = req.body;
+
+      if(!title) throw new Error("No se encontro el titulo.");
+
       const result = await Game.destroy({
         where: {
           title,
@@ -85,7 +85,7 @@ class GameController {
       .status(200)
       .send({ success: true, message: "Juego eliminado con exito." });
     } catch (error) {
-      res.status(400).send({ success: false, message: error });
+      res.status(400).send({ success: false, message: error.message });
     }
 
   }
@@ -111,6 +111,7 @@ class GameController {
           model: Language,
           attributes: ["language"],
           through: { attributes: [] },
+          association: "gameLanguages",
         },
       });
 
@@ -118,7 +119,7 @@ class GameController {
       .status(200)
       .send({ success: true, message: result });
     } catch (error) {
-      res.status(400).send({ success: false, message: error });
+      res.status(400).send({ success: false, message: error.message });
     }
 
   }

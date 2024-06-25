@@ -3,10 +3,6 @@ import connection from "../connection/connection.js";
 import {Sale} from "./models.js";
 
 class UserGame extends Model {
-  async faveUnFave({transaction}) {
-    this.favourite = !this.favourite;
-    await this.save({transaction});
-  }
 
   static async faveUnFave({ UserId, GameTitle }, {transaction}) {
 
@@ -23,7 +19,8 @@ class UserGame extends Model {
     const userGame = await UserGame.findOne(query);
     if(!userGame) throw new Error("No tenes el juego reclamado.");
 
-    await userGame.faveUnFave({transaction});
+    userGame.favourite = !userGame.favourite;
+    await userGame.save({transaction});
 
     return userGame;
   }

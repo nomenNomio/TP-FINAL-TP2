@@ -21,7 +21,7 @@ class UserControllers {
       if (!isAdmin) throw new Error("Necesita ser Administrador para esta consulta.");
 
       const result = await User.findAll({
-        attributes: ["id", "userName", "email", "RoleId"],
+        attributes: ["id", "userName", "initialsName", "email", "RoleId"],
         include: {
           model: Role,
           attributes: ["role"],
@@ -35,10 +35,18 @@ class UserControllers {
   }
 
   async getUserById(req, res) {
+
+    const options = {
+      attributes: ["id", "userName", "initialsName", "email", "RoleId"],
+      include: {
+        model: Role,
+        attributes: ["role"],
+      },
+    };
+
     try {
       const { id } = req.params;
-
-      const {dataValues: result} = await User.findByPk(id);
+      const result = await User.findByPk(id, options);
       if (!result) throw new Error("Usuario no encontrado.");
 
       res.status(200).send({ success: true, message: result });
@@ -84,24 +92,27 @@ class UserControllers {
   }
 
   async updateUser(req, res) {
+
+    const transactionUpdate = await connection.transaction();
+
     try {
       //modifica el usuario que tenga el mismo id que en la cookie
       const { id } = req.user;
-      const { userName, email, password } = req.body;
+      const { name, lastName, userName, email, password } = req.body;
 
+      //metodo modificado en la clase
       const result = await User.update(
-        { userName, email, password },
-        {
-          where: {
-            id,
-          },
-        }
+        { id, name, lastName, userName, email, password },
+        { transaction: transactionUpdate }
       );
+
+      transactionUpdate.commit();
 
       res
         .status(200)
         .send({ success: true, message: "Usuario modificado con exito." });
     } catch (error) {
+      transactionUpdate.rollback();
       res.status(400).send({ success: false, message: error.message });
     }
   }
@@ -115,6 +126,8 @@ class UserControllers {
         },
       });
 
+      if(!result) throw new Error("No se elimino ningun usuario");
+
       res
         .status(200)
         .send({ success: true, message: "Usuario eliminado con exito." });
@@ -125,20 +138,9 @@ class UserControllers {
 
   async login(req, res) {
     try {
-      const { mail, password } = req.body;
+      const { email, password } = req.body;
 
-      const user = await User.findOne({
-        where: {
-          mail,
-        },
-      });
-
-      if (!user) throw new Error("Usuario no encontrado.");
-
-      //se fija si la contraseña es correcta
-      const comparePass = await user.comparePass(password);
-      if (!comparePass)
-        throw new Error("El usuario o la contraseña son incorrectos.");
+      const user = await User.login({ email, password });
 
       //envia el token
       res.cookie(
@@ -170,7 +172,7 @@ class UserControllers {
       const { id: UserId } = req.user;
 
       //este metodo esta reescrito en la clase, añade al amount si la "Sale" ya existe.
-      const {dataValues: sale} = await Sale.create(
+      const sale = await Sale.create(
         {
           GameTitle,
           UserId,
@@ -181,7 +183,7 @@ class UserControllers {
 
       transactionSale.commit();
 
-      res.status(200).send({ success: true, message: sale });
+      res.status(200).send({ success: true, message: sale.dataValues });
     } catch (error) {
       transactionSale.rollback();
       res.status(400).send({ success: false, message: error.message });
@@ -223,8 +225,11 @@ class UserControllers {
         { transaction: transactionFave }
       );
 
+      transactionFave.commit();
+
       res.status(200).send({ success: true, message: userGame });
     } catch (error) {
+      transactionFave.rollback();
       res.status(400).send({ success: false, message: error.message });
     }
   }
@@ -241,7 +246,11 @@ class UserControllers {
         },
       });
 
-      res.status(200).send({ success: true, message: favouriteGames });
+      const message = favouriteGames.length
+        ? favouriteGames
+        : "No hay ningun juego favorito";
+
+      res.status(200).send({ success: true, message });
     } catch (error) {
       res.status(400).send({ success: false, message: error.message });
     }

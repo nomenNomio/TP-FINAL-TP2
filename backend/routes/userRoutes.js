@@ -12,21 +12,16 @@ userRoutes.post("/login", userControllers.login);
 userRoutes.use(validateLogin);
 
     userRoutes.get("/", userControllers.getAllUser);
+    userRoutes.get("/me", userControllers.me);
+    userRoutes.get("/favourite", userControllers.getAllFavouriteGames);
     userRoutes.get("/:id", userControllers.getUserById);
 
-    userRoutes.put("/", userControllers.updateUser);
-    userRoutes.delete("/", userControllers.deleteUser);
-    userRoutes.get("/me", userControllers.me);
-
-    userRoutes.get("/favourite", userControllers.getAllFavouriteGames);
-
-    userRoutes.put("/favourite", userControllers.faveUnFave);
     userRoutes.post("/buygame", userControllers.buyGame);
     userRoutes.post("/claimgame", userControllers.claimGame);
 
+    userRoutes.put("/favourite", userControllers.faveUnFave);
+    userRoutes.put("/", userControllers.updateUser);
 
-
-
-
+    userRoutes.delete("/", userControllers.deleteUser);
 
 export default userRoutes;
